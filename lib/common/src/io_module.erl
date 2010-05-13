@@ -104,10 +104,10 @@ init([ModuleName, Args]) ->
 %%                                   {noreply, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_call({put, Bucket, Key, Value}, _From, State=#state{module=ModuleName, module_args=Conn) ->
+handle_call({put, Bucket, Key, Value}, _From, State=#state{module=ModuleName, module_args=Conn}) ->
     Reply = ModuleName:put(Bucket, Key, Value, Conn),
     {reply, Reply, State};
-handle_call({get, Bucket, Key}, _From, State=#state{module=ModuleName, module_args=Conn) ->
+handle_call({get, Bucket, Key}, _From, State=#state{module=ModuleName, module_args=Conn}) ->
     Reply = ModuleName:get(Bucket, Key, Conn),
     {reply, Reply, State};
 handle_call(Request, _From, State) ->
