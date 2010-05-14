@@ -57,7 +57,7 @@ stop_resume_test(Config) ->
                     code:add_paths(filelib:wildcard("../../lib/*/ebin")),
                     [ok, ok, ok, ok] =
                         [application:start(App)
-                         || App <- [common, chronicler, ecg, master]],
+                         || App <- [common, chronicler, mainChronicler, ecg, master]],
 
                     %% We hate database
                     %%db:create_tables(ram_copies),

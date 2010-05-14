@@ -60,6 +60,8 @@ pause_resume_test(Config) ->
                     ok = application:start(common),
                     code:add_path("../../lib/chronicler/ebin"),
                     ok = application:start(chronicler),
+                    code:add_path("../../lib/mainChronicler/ebin"),
+                    ok = application:start(mainChronicler),
                     code:add_path("../../lib/ecg/ebin"),
                     ok = application:start(ecg),
                     code:add_path("../../lib/master/ebin"),
