@@ -23,7 +23,7 @@ parse(Key, [_Other | Config]) ->
 read_config(File, Key) ->
     {Ret, Config} = file:consult(File),
     case Ret of 
-        error -> chronicler:debug("~w : Could not find the configfile '~w'~n",
+        error -> chronicler:debug("~w : Could not find the configfile '~w'~p",
 				    [?MODULE, File]),
                 {error, Config};
         ok -> Value = parse(Key, Config),
