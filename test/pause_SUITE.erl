@@ -182,8 +182,9 @@ pause_resume_test(Config) ->
 
     %lets diff the outcome and be happy if diff returns []
     DiffCmd = lists:concat(["diff "
-        "/storage/test/results/", JobId1, "/word_count "
-        "/storage/test/results/", JobId2, "/word_count"]),
+        "/storage/test/tmp/", JobId1, "/results/finalize"
+        " "
+        "/storage/test/tmp/", JobId2, "/results/finalize"]),
     [] = os:cmd(DiffCmd),
 
     M ! {request, {stop, self()}},
