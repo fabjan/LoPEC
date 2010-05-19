@@ -15,7 +15,7 @@ configparser_test_() ->
              {inorder,
               [
                ?_assertEqual({error, enoent},
-                             configparser:read_config("ysnftf, HEHE", key)),
+                             configparser:read_config("ysnftf HEHE", key)),
                ?_assertEqual({ok, "/storage/test/"},
                              configparser:read_config("/etc/lopec.conf",
                                                       cluster_root)),
