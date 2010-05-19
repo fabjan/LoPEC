@@ -18,8 +18,8 @@ listener_test_() ->
      fun ({JobId, JobId2}) ->
              {inorder,
               [
-               ?_assertMatch({error, inputdata_dont_exist},
-                   listener:add_job(wordcount, mapreduce, kalle, 5, "/storage/temp/lol.txt")),
+               ?_assertMatch({error, enoent},
+                   listener:add_job(wordcount, mapreduce, kalle, 5, "If%you&have-this*file+you!are.a'silly)banana")),
                ?_assertMatch({error, _Reason}, listener:pause_job(123123)),
                ?_assertEqual(anonymous, listener:get_job_name(JobId)),
                ?_assertEqual({name, "ApanJansson"},
@@ -37,6 +37,7 @@ listener_test_() ->
 tests_init() ->
     ok = application:start(common),
     ok = application:start(chronicler),
+    ok = application:start(mainChronicler),
     ok = application:start(ecg),
     ok = application:start(master),
     chronicler:set_logging_level([all]),
@@ -56,6 +57,7 @@ tests_init() ->
 tests_stop(_) ->
     ok = application:stop(master),
     ok = application:stop(ecg),
+    ok = application:stop(mainChronicler),
     ok = application:stop(chronicler),
     ok = application:stop(common),
     %examiner:stop(),
