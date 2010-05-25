@@ -33,6 +33,7 @@ all() ->
 init_per_suite(Config) ->
     ok = application:start(common),
     ok = application:start(chronicler),
+    ok = application:start(mainChronicler),
     ok = application:start(ecg),
     ok = application:start(master),
     error_logger:tty(false),
@@ -42,6 +43,7 @@ end_per_suite(_Config) ->
     ok = application:stop(master),
     ok = application:stop(ecg),
     ok = application:stop(common),
+    ok = application:stop(mainChronicler),
     ok = application:stop(chronicler).
 
 
