@@ -54,13 +54,14 @@ init(no_args) ->
           child(statistician, worker, [slave]),
 	  child(taskFetcher, worker, []),
           child(io_module, worker,
-                case configparser:read_config("/etc/lopec.conf",
-                                              storage_backend) of
-                         {ok, fs} -> [fs_io_module, no_args];
-                         {ok, riak} -> [riak_io_module,
-                                        [{riak_node,
-                                          list_to_atom("riak@"
-                                                       ++ os:getenv("MYIP"))}]]
+                case application:get_env(storage_backend) of
+                    {ok, fs} -> [fs_io_module, no_args];
+                    {ok, riak} ->
+                        {ok, Interface} = application:get_env(riak_interface),
+                        {ok, [{addr, {A,B,C,D}}]} = inet:ifget(Interface, [addr]),
+                        IP = lists:concat([A,".",B,".",C,".",D]),
+                        [riak_io_module,
+                         [{riak_node, list_to_atom("riak@" ++ IP)}]]
                 end)
 	 ]
 	}

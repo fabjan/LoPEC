@@ -38,7 +38,7 @@ get_load(Period) ->
 %%--------------------------------------------------------------------
 get_watt(Period) ->
     Load = get_load(Period),
-    {ok, Cores} = configparser:read_config(?CONFIGFILE, cores),
+    {ok, Cores} = application:get_env(cores),
     case Period of
         l1min -> T = 60;
         l5min -> T = 5*60;
@@ -46,10 +46,8 @@ get_watt(Period) ->
     end, 
     %% This is not a very effective way to measure watt.
     %% But it's the only way right know.
-    {ok, HLW} =
-        configparser:read_config(?CONFIGFILE, high_load_watt),
-    {ok, LLW} =
-        configparser:read_config(?CONFIGFILE, low_load_watt),
+    {ok, HLW} = application:get_env(high_load_watt),
+    {ok, LLW} = application:get_env(low_load_watt),
     case Load of 
         Load when Load > Cores ->
             HLW;

@@ -625,10 +625,9 @@ handle_cast({job_finished, JobId}, State) ->
 	_Dont ->
 	    ok
     end,
-    {ok, Root} =
-        configparser:read_config(?CONFIGFILE, cluster_root),
+    {ok, Root} = application:get_env(cluster_root),
     file:write_file(Root ++ "results/" ++
-                  integer_to_list(JobId) ++ "/stats", JobStats),
+                    integer_to_list(JobId) ++ "/stats", JobStats),
     chronicler:info(JobStats),
     {noreply, State};
 %%--------------------------------------------------------------------
@@ -651,8 +650,7 @@ handle_cast({remove_node, NodeId}, State) ->
     ets:match_delete(node_stats_table,
                      {{NodeId},'_','_','_','_','_','_','_',
                               '_','_'}),
-    {ok, Root} =
-        configparser:read_config(?CONFIGFILE, cluster_root),
+    {ok, Root} = application:get_env(cluster_root),
     file:write_file(Root ++ "results/node_" ++
                   atom_to_list(NodeId) ++ "_stats", NodeStats),
     chronicler:info("Node "++atom_to_list(NodeId)

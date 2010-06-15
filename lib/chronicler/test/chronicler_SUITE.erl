@@ -29,9 +29,7 @@ init_per_suite(Config) ->
     ok = application:start(common),
     ok = application:start(chronicler),
 
-    {ok, LogDir} =
-    configparser:read_config("/etc/lopec.conf",
-        log_dir),
+    {ok, LogDir} = application:get_env(log_dir),
     LogFile = LogDir ++ "/" ++ atom_to_list(node()),
 
     {ok, File} = file:open(LogFile, read),

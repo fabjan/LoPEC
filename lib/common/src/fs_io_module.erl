@@ -29,8 +29,7 @@
 %% @end
 %%--------------------------------------------------------------------
 init(_Args) ->
-    {ok, Path} = configparser:read_config("/etc/lopec.conf",
-                                          fs_backend_root),
+    {ok, Path} = application:get_env(fs_backend_root),
     {ok, {fs, Path}}.
 
 %%--------------------------------------------------------------------

@@ -34,9 +34,7 @@
 %% @end
 %%--------------------------------------------------------------------
 init(_Args) ->
-    {ok, LogDir} =
-    configparser:read_config("/etc/lopec.conf",
-        log_dir),
+    {ok, LogDir} = application:get_env(log_dir),
     LogFile = LogDir ++ "/" ++ atom_to_list(node()),
 
     {ok, Log} = file:open(LogFile, [append]),

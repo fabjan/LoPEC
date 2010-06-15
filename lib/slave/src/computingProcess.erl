@@ -107,8 +107,8 @@ stop_job() ->
 %% @end
 %%--------------------------------------------------------------------
 init([ProgName, TaskType, JobId, TaskId, StorageKeys]) ->
-    {ok, Root} = configparser:read_config(?CONFIGFILE, cluster_root),
-    {ok, Platform} = configparser:read_config(?CONFIGFILE, platform),
+    {ok, Root} = application:get_env(cluster_root),
+    {ok, Platform} = application:get_env(platform),
     ProgRoot = lists:concat([Root, "/programs/", ProgName, "/"]),
     ProgPath = lists:concat([ProgRoot, "/script.", Platform]),
     JobRoot = lists:concat([Root, "/tmp/", JobId, "/"]),
@@ -143,8 +143,7 @@ init([ProgName, TaskType, JobId, TaskId, StorageKeys]) ->
 %% HERE IS THE EVUL PRÅBLEM
 handle_call(stop_job, _From,
             State = #state{job_id = JobId, pids_to_kill = Pids}) ->
-    {ok, Root} = configparser:read_config("/etc/lopec.conf",
-                                          cluster_root),
+    {ok, Root} = application:get_env(cluster_root),
     chronicler:info("~w: About to kill ~p", [?MODULE, Pids]),
     PidPath = lists:concat([Root, "/tmp/", JobId, "/pid/", node(), "/*.pid"]),
     PidFiles = filelib:wildcard(PidPath),

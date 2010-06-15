@@ -16,8 +16,7 @@
 -include_lib("common_test/include/ct.hrl").
 
 init_per_suite(Config) ->
-    {ok, ClusterRoot} =
-        configparser:read_config("/etc/lopec.conf", cluster_root),
+    {ok, ClusterRoot} = application:get_env(cluster_root),
     JobId = 10101,
     JobRoot = lists:concat([ClusterRoot, "/tmp/", JobId]),
     [filelib:ensure_dir(JobRoot ++ Task)

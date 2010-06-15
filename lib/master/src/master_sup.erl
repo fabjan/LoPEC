@@ -56,15 +56,17 @@ init(no_args) ->
     Statistician = child(statistician, worker, [master]),
     Examiner = child(examiner, worker, no_args),
     % @todo make the io module configurable instead of hard coded
-    IoModule = child(io_module, worker,
-                     case configparser:read_config("/etc/lopec.conf",
-                                                   storage_backend) of
-                         {ok, fs} -> [fs_io_module, no_args];
-                         {ok, riak} -> [riak_io_module,
-                                        [{riak_node,
-                                          list_to_atom("riak@"
-                                                       ++ os:getenv("MYIP"))}]]
-                     end),
+    IoModule =
+        child(io_module, worker,
+              case application:get_env(storage_backend) of
+                  {ok, fs} -> [fs_io_module, no_args];
+                  {ok, riak} ->
+                      {ok, Interface} = application:get_env(riak_interface),
+                      {ok, [{addr, {A,B,C,D}}]} = inet:ifget(Interface, [addr]),
+                      IP = lists:concat([A,".",B,".",C,".",D]),
+                      [riak_io_module,
+                       [{riak_node, list_to_atom("riak@" ++ IP)}]]
+              end),
     % Returning supervisor specification
     {ok,{{one_for_one,1,60},
          [Dispatcher, DbDaemon, IoModule, Listener, Examiner, Statistician]}}.

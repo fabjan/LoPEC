@@ -27,7 +27,7 @@
 %% @end
 %%--------------------------------------------------------------------
 get_cluster_path() ->
-    {ok, Root} = configparser:read_config(?CONFIGFILE, cluster_root),
+    {ok, Root} = application:get_env(cluster_root),
     Root.
 
 %%--------------------------------------------------------------------

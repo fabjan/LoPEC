@@ -90,7 +90,7 @@ add_job(ProgramType, ProblemType, Owner, Priority, InputData) ->
 add_bg_job(ProgramType, ProblemType, Owner, Priority, InputData, Name) ->
     chronicler:debug("~w: called new_bg_job with a name=~w~n",
                     [?MODULE, Name]),
-    case configparser:read_config("/etc/lopec.conf", allow_bg_jobs) of
+    case application:get_env(allow_bg_jobs) of
         {ok, yes} ->
             gen_server:call(?MODULE,
                             {new_job, ProgramType, ProblemType, Owner,
@@ -465,15 +465,13 @@ code_change(OldVsn, State, Extra) ->
 %%------------------------------------------------------------------------------
 %% @private
 %% @doc
-%% Checks if JobType is a valid jobtype. This is done by checking if there exist
-%% a "script.sh"-file in the CLUSTERROOT/programs/JobType/
+%% Checks if JobType is a valid jobtype.
 %%
 %% @spec is_valid_jobtype(JobType) -> {ok} | {error, Reason}
 %% @end
 %%------------------------------------------------------------------------------
 is_valid_jobtype(JobType) ->
-    {ok, Root} =
-        configparser:read_config(?CONFIGFILE, cluster_root),
+    {ok, Root} = application:get_env(cluster_root),
     ProgramDir = lists:concat([Root, "programs/", JobType]),
     filelib:is_dir(ProgramDir).
 
