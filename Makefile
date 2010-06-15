@@ -1,7 +1,3 @@
-CALLGRAPH_NAME=call_graph
-CALLGRAPH_DIR=LR
-CALLGRAPH_TYPE=pdf
-
 all: build common_test dialyze docs
 
 build:
@@ -69,7 +65,12 @@ dialyze: build
 	dialyzer --verbose -c lib/*/ebin --dump_callgraph ${CALLGRAPH_NAME}.dot \
 	         | sed 's/^\(\w*\.erl\)/\n\1/'
 
+CALLGRAPH_NAME=call_graph
+CALLGRAPH_DIR=LR
+CALLGRAPH_TYPE=png
+
 callgraph: dialyze
-	sed -i "s/^\(digraph CG {\)/\1rankdir=\"${CALLGRAPH_DIR}\";/" ${CALLGRAPH_NAME}.dot
+	sed -i "s/^\(digraph CG {\)/\1rankdir=\"${CALLGRAPH_DIR}\";/"\
+               ${CALLGRAPH_NAME}.dot
 	dot -T${CALLGRAPH_TYPE} ${CALLGRAPH_NAME}.dot \
 	    -o ${CALLGRAPH_NAME}.${CALLGRAPH_TYPE}
